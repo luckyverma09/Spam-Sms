@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Spam SMS Detector</title>
+        <link rel="SpamHound icon" href="{{ url_for('static', filename='SpamHound_Icon.png') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+        <script src="https://kit.fontawesome.com/5f3f547070.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+
+        <!-- Website Title -->
+        <div class="container">
+            <h2 class='container-heading'>⚠️Spam Detector for Short Message Service (SMS)⚠️</h2>
+            <br><br>
+            <div class='description'>
+            </div>
+
+            <div class="ml-container">
+                <form action="{{ url_for('predict') }}" method="POST" onsubmit="return validateForm()">
+                    <textarea id="message" class="message-box" name="message" rows=15 cols=40
+                        placeholder="Enter Your Message Here..."></textarea><br />
+                    <input type="submit" class="btn" value="Predict">
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function validateForm () {
+                var message = document.getElementById( 'message' ).value.trim();
+                if ( message === '' ) {
+                    alert( "Message can't be empty." );
+                    return false; // Prevent form submission
+                }
+                return true; // Allow form submission
+            }
+        </script>
+
+    </body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Spam SMS Detector</title>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+		<script src="https://kit.fontawesome.com/5f3f547070.js" crossorigin="anonymous"></script>
+	</head>
+
+	<body>
+
+		<!-- Main Content -->
+		<div class="container">
+			<h2 class='container-heading'>⚠️Spam Detector for Short Message Service (SMS)⚠️</h2>
+
+			<!-- Result Section -->
+			<div class="results">
+				{% if prediction==1 %}
+				<h1>Prediction: <span class='danger'>Be Alert! This is a SPAM Message.</span></h1>
+				<img class="image" src="{{ url_for('static', filename='SpamHound_Icon.png') }}" alt="SPAM Image">
+				{% elif prediction==0 %}
+				<h1>Prediction: <span class='safe'>Great! This is NOT a Spam Message.</span></h1>
+				<img class="image" src="{{ url_for('static', filename='Safe.png') }}" alt="Not a spam image">
+				{% endif %}
+
+				<!-- Button -->
+				<br>
+				<a href="/" class="btn">Go to Home</a> <!-- Moved button below the GIF -->
+			</div>
+		</div>
+
+	</body>
+
+</html>
