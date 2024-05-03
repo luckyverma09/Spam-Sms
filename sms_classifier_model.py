@@ -1,50 +1,41 @@
-# Importing essential libraries
 import pandas as pd
 import numpy as np
 import pickle
 
-# Loading the dataset
-df = pd.read_csv("spam.csv",encoding="latin-1")
+df = pd.read_csv("spam.csv", encoding="latin-1")
 
-df.rename(columns = {"v1":"label", "v2":"message"}, inplace = True)
+df.rename(columns={"v1": "label", "v2": "message"}, inplace=True)
 df['label'] = df['label'].map({'ham': 0, 'spam': 1})
 
-# Importing essential libraries for performing Natural Language Processing on 'SMS Spam Collection' dataset
 import nltk
 import re
 nltk.download('stopwords')
 from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
+from nltk.stem import WordNetLemmatizer  
 
 # Cleaning the messages
 corpus = []
-ps = PorterStemmer()
-
+lemmatizer = WordNetLemmatizer()  
 for sms_string in list(df.message):
 
-  # Cleaning special character from the message
-  message = re.sub(pattern='[^a-zA-Z]', repl=' ', string=sms_string)
+    message = re.sub(pattern='[^a-zA-Z]', repl=' ', string=sms_string)
+    message = message.lower()
 
-  # Converting the entire message into lower case
-  message = message.lower()
+    # Tokenizing the review by words
+    words = message.split()
 
-  # Tokenizing the review by words
-  words = message.split()
+    # Removing the stop words and applying lemmatization
+    words = [lemmatizer.lemmatize(word) for word in words if word not in set(stopwords.words('english'))]
 
-  # Removing the stop words
-  words = [word for word in words if word not in set(stopwords.words('english'))]
+    # Joining the lemmatized words
+    message = ' '.join(words)
 
-  # Stemming the words
-  words = [ps.stem(word) for word in words]
+    # Building a corpus of messages
+    corpus.append(message)
 
-  # Joining the stemmed words
-  message = ' '.join(words)
-
-  # Building a corpus of messages
-  corpus.append(message)
-  
 # Creating the Bag of Words model
 from sklearn.feature_extraction.text import CountVectorizer
+
 cv = CountVectorizer(max_features=2500)
 X = cv.fit_transform(corpus).toarray()
 
@@ -58,13 +49,14 @@ pickle.dump(cv, open('cv-transform.pkl', 'wb'))
 # Model Building
 
 from sklearn.model_selection import train_test_split
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=0)
 
 # Fitting Naive Bayes to the Training set
 from sklearn.naive_bayes import MultinomialNB
+
 classifier = MultinomialNB(alpha=0.3)
 classifier.fit(X_train, y_train)
-
 
 # Creating a pickle file for the Multinomial Naive Bayes model
 filename = 'spam-sms-mnb-model.pkl'
